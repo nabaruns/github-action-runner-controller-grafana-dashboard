@@ -489,7 +489,7 @@
           "refId": "C"
         }
       ],
-      "title": "Runners",
+      "title": "Runners ($runner_name)",
       "type": "timeseries"
     },
     {
@@ -547,56 +547,7 @@
             ]
           }
         },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byRegexp",
-              "options": "/.*GET.*/"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "GET"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byRegexp",
-              "options": "/.*PATCH.*/"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "PATCH"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byRegexp",
-              "options": "/.*PUT.*/"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "PUT"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byRegexp",
-              "options": "/.*POST.*/"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "POST"
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
         "h": 8,
@@ -626,11 +577,12 @@
           "editorMode": "code",
           "expr": "rest_client_requests_total{job=\"$scrape_jobs\"}",
           "instant": false,
+          "legendFormat": "{{method}}",
           "range": true,
           "refId": "A"
         }
       ],
-      "title": "rest_client_requests",
+      "title": "REST Client Requests",
       "type": "timeseries"
     },
     {
@@ -719,6 +671,7 @@
           "editorMode": "code",
           "expr": "workqueue_adds_total{job=\"$scrape_jobs\"}",
           "instant": false,
+          "legendFormat": "{{name}}",
           "range": true,
           "refId": "A"
         }
@@ -809,18 +762,159 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "github_rate_limit_remaining",
+          "expr": "github_rate_limit_remaining{job=\"$scrape_jobs\"}",
           "hide": false,
           "instant": false,
+          "legendFormat": "Github Rate Limit",
           "range": true,
           "refId": "B"
         }
       ],
-      "title": "github_rate_limit_remaining",
+      "title": "Github Rate Limit",
       "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 24
+      },
+      "id": 9,
+      "options": {
+        "displayMode": "gradient",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "valueMode": "color"
+      },
+      "pluginVersion": "10.0.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "workqueue_work_duration_seconds_bucket{job=\"$scrape_jobs\", name=\"$name\"}",
+          "format": "time_series",
+          "instant": false,
+          "legendFormat": "{{le}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Work Duration ($name)",
+      "type": "bargauge"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 24
+      },
+      "id": 10,
+      "options": {
+        "displayMode": "gradient",
+        "minVizHeight": 10,
+        "minVizWidth": 0,
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "last"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showUnfilled": true,
+        "valueMode": "color"
+      },
+      "pluginVersion": "10.0.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          },
+          "editorMode": "code",
+          "exemplar": false,
+          "expr": "workqueue_queue_duration_seconds_bucket{job=\"$scrape_jobs\", name=\"$name\"}",
+          "format": "time_series",
+          "instant": false,
+          "legendFormat": "{{le}}",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Queue Duration ($name)",
+      "type": "bargauge"
     }
   ],
-  "refresh": "10s",
+  "refresh": "30s",
   "schemaVersion": 38,
   "style": "dark",
   "tags": [],
@@ -829,34 +923,34 @@
       {
         "current": {
           "selected": false,
-          "text": "action-runner-controller",
-          "value": "action-runner-controller"
+          "text": "actions-runner-actions-runner-controller-metrics-service",
+          "value": "actions-runner-actions-runner-controller-metrics-service"
         },
         "datasource": {
           "type": "prometheus",
           "uid": "prometheus"
         },
-        "definition": "label_values(scrape_job)",
+        "definition": "label_values(job)",
         "hide": 0,
         "includeAll": false,
         "multi": false,
         "name": "scrape_jobs",
         "options": [],
         "query": {
-          "query": "label_values(scrape_job)",
+          "query": "label_values(job)",
           "refId": "PrometheusVariableQueryEditor-VariableQuery"
         },
         "refresh": 1,
-        "regex": "",
+        "regex": "/^actions.*/",
         "skipUrlSync": false,
         "sort": 0,
         "type": "query"
       },
       {
         "current": {
-          "selected": true,
-          "text": "self-hosted-deploy",
-          "value": "self-hosted-deploy"
+          "selected": false,
+          "text": "self-hosted-ci",
+          "value": "self-hosted-ci"
         },
         "datasource": {
           "type": "prometheus",
@@ -877,17 +971,43 @@
         "skipUrlSync": false,
         "sort": 0,
         "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "horizontalrunnerautoscaler-controller",
+          "value": "horizontalrunnerautoscaler-controller"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
+        "definition": "label_values(name)",
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "name",
+        "options": [],
+        "query": {
+          "query": "label_values(name)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "/^[horizontal]*runner.*-controller.*/",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
       }
     ]
   },
   "time": {
-    "from": "now-6h",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Action runner controller",
   "uid": "f9506d6b-34c6-460c-b599-2c25a1b60f42",
-  "version": 20,
+  "version": 35,
   "weekStart": ""
 }
